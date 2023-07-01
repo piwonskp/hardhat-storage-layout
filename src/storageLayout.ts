@@ -14,18 +14,7 @@ export class StorageLayout {
     this.env = hre;
   }
 
-  public async export() {
-    const storageLayoutPath = this.env.config.paths.newStorageLayoutPath;
-    const outputDirectory = path.resolve(storageLayoutPath);
-    if (!outputDirectory.startsWith(this.env.config.paths.root)) {
-      throw new HardhatPluginError(
-        "output directory should be inside the project directory"
-      );
-    }
-    if (!fs.existsSync(outputDirectory)) {
-      fs.mkdirSync(outputDirectory);
-    }
-
+  public async getLayout() {
     const buildInfos = await this.env.artifacts.getBuildInfoPaths();
     const artifactsPath = this.env.config.paths.artifacts;
     const artifacts = buildInfos.map((source, idx) => {
@@ -77,6 +66,23 @@ export class StorageLayout {
         // TODO: export the storage layout to the ./storageLayout/output.md
       }
     }
+    return data;
+  }
+
+  public async export() {
+    const storageLayoutPath = this.env.config.paths.newStorageLayoutPath;
+    const outputDirectory = path.resolve(storageLayoutPath);
+    if (!outputDirectory.startsWith(this.env.config.paths.root)) {
+      throw new HardhatPluginError(
+        "output directory should be inside the project directory"
+      );
+    }
+    if (!fs.existsSync(outputDirectory)) {
+      fs.mkdirSync(outputDirectory);
+    }
+
+    const data = this.getLayout();
+    
     const prettifier = new Prettify(data.contracts);
     prettifier.tabulate();
   }
