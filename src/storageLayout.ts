@@ -81,7 +81,7 @@ export class StorageLayout {
       fs.mkdirSync(outputDirectory);
     }
 
-    const data = this.getLayout();
+    const data = await this.getLayout();
     
     const prettifier = new Prettify(data.contracts);
     prettifier.tabulate();
