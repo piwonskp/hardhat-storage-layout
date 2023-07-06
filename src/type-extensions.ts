@@ -19,6 +19,7 @@ declare module "hardhat/types/runtime" {
   export interface HardhatRuntimeEnvironment {
     storageLayout: {
       export: () => Promise<void>;
+      getLayout: () => Promise<Table>;
     };
   }
 }
