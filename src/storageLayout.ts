@@ -69,7 +69,7 @@ export class StorageLayout {
         // TODO: export the storage layout to the ./storageLayout/output.md
       }
     }
-    return [data, types];
+    return {data, types};
   }
 
   public async export() {
@@ -84,7 +84,7 @@ export class StorageLayout {
       fs.mkdirSync(outputDirectory);
     }
 
-    const [data] = await this.getLayout();
+    const {data} = await this.getLayout();
     
     const prettifier = new Prettify(data.contracts);
     prettifier.tabulate();
