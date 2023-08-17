@@ -50,7 +50,7 @@ export class StorageLayout {
         }
         const contract: Row = { name: contractName, stateVariables: [] };
         types[contractName] = artifactJsonABI.data.output?.contracts[sourceName][contractName]
-                .storageLayout.types[stateVariable.type];
+                .storageLayout.types;
         for (const stateVariable of storage) {
           contract.stateVariables.push({
             name: stateVariable.label,
