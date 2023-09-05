@@ -39,6 +39,7 @@ export class StorageLayout {
     names.sort((a, b) => a.contractName.localeCompare(b.contractName));
 
     const data: Table = { contracts: [] };
+    const types = {};
     for (const { sourceName, contractName } of names) {
       for (const artifactJsonABI of artifacts) {
         const storage =
@@ -48,6 +49,8 @@ export class StorageLayout {
           continue;
         }
         const contract: Row = { name: contractName, stateVariables: [] };
+        types[contractName] = artifactJsonABI.data.output?.contracts[sourceName][contractName]
+                .storageLayout.types;
         for (const stateVariable of storage) {
           contract.stateVariables.push({
             name: stateVariable.label,
@@ -66,7 +69,7 @@ export class StorageLayout {
         // TODO: export the storage layout to the ./storageLayout/output.md
       }
     }
-    return data;
+    return {data, types};
   }
 
   public async export() {
@@ -81,7 +84,7 @@ export class StorageLayout {
       fs.mkdirSync(outputDirectory);
     }
 
-    const data = await this.getLayout();
+    const {data} = await this.getLayout();
     
     const prettifier = new Prettify(data.contracts);
     prettifier.tabulate();
